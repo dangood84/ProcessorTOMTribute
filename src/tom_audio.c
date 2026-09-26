@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 
-#include <SDL.h>
+#include "sdl_inc.h"
 
 #define RATE 44100
 

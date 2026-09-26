@@ -52,30 +52,90 @@ When it halts, the program counter shows **02**, the accumulator shows **55**, a
 ## Requirements
 
 - A C11 compiler (`cc` or `gcc`)
-- **SDL2** (`sdl2-config` on your `PATH`)
+- **SDL2**
 
-macOS (Homebrew), including an M1 MacBook Pro on Sonoma:
+The grid is drawn at 1100×740. On a smaller Windows desktop or a Raspberry Pi panel the window shrinks to fit, and the same grid is scaled into it.
+
+### macOS
+
+Homebrew, including an M1 MacBook Pro on Sonoma and an Intel Mac:
 
 ```bash
 brew install sdl2
+make test
+make run
 ```
 
-Debian / Raspberry Pi OS:
+On Apple Silicon, Homebrew lives in `/opt/homebrew`. On a 2014 Intel Mac it lives in `/usr/local`. The Makefile uses `sdl2-config`, so either prefix works.
+
+### Raspberry Pi OS
+
+Use the **desktop** image. A Lite/SSH-only session has no window to open. `make test` still runs over SSH; the horn and the grid need the desktop.
+
+**1. Packages**
 
 ```bash
+sudo apt update
 sudo apt install build-essential libsdl2-dev
 ```
 
-### Windows 10
+`libsdl2-dev` supplies the matching ARM library. There is no `SDL2.dll` to copy. 32-bit Pi OS (`armhf`) and 64-bit Pi OS (`aarch64`) both work.
 
-From an MSYS2 UCRT prompt, with gcc and SDL2 installed:
+**2. Test, then open the grid**
 
-```bat
-build-win.bat
-build\tom.exe examples\countup.tom
+From the project folder:
+
+```bash
+make test
+make run
 ```
 
-If Windows cannot find `SDL2.dll`, copy it next to `tom.exe`. Match the DLL to the compiler (64-bit gcc needs the 64-bit DLL).
+`make test` prints `all tests passed` and does not open a window. `make run` opens count-up. Press **F5**.
+
+If the window never appears over SSH, run it on the Pi’s desktop, or set `DISPLAY` if you are forwarding X.
+
+### Windows 10 (Boot Camp)
+
+This is the path for a 2014 Intel MacBook Pro on **Boot Camp** (Windows 10, 64-bit). The Mac disk is often read-only from Windows, so clone the project onto `C:` rather than building on the macOS volume.
+
+**1. Compiler and SDL2**
+
+Install [MSYS2](https://www.msys2.org/) if `gcc` is not already there. Open **MSYS2 MinGW x64** (the blue one, not the plain MSYS shell) and run:
+
+```bash
+pacman -Syu
+pacman -S --needed mingw-w64-x86_64-gcc mingw-w64-x86_64-SDL2 mingw-w64-x86_64-pkgconf make git
+```
+
+If `pacman -Syu` closes the window, open it again and finish the second update it asks for, then install the packages.
+
+`SDL2.dll` is what Windows loads when the program **starts**. The message `SDL.h: No such file or directory` happens while **compiling**, before that DLL is used. The header `SDL.h` is in the SDL2 development package (`include\SDL2`), which `pacman -S mingw-w64-x86_64-SDL2` installs next to `gcc`. Copying the DLL into `build\` does not put that header on the compiler’s path.
+
+**2. Build from Command Prompt**
+
+```bat
+cd C:\Users\DGood\Documents\ProcessorTOMTribute
+build-win.bat
+```
+
+The bat looks for `SDL.h` beside `gcc` (and under `C:\msys64\mingw64`). It then copies `SDL2.dll` into `build\` itself.
+
+Same build from make, if `make` is on PATH:
+
+```bat
+make windows
+```
+
+**3. Test, then open the grid**
+
+```bat
+build\tom.exe --test examples
+run.bat
+```
+
+`run` is the same as `run.bat`. `--test` prints `all tests passed` with no window. `run.bat` opens count-up. Press **F5**.
+
+If Windows says it cannot find `SDL2.dll` at startup, the DLL is missing from `build\` or it is the wrong bitness. `gcc -dumpmachine` and the DLL have to match. The bat copies the DLL that belongs to that `gcc`.
 
 ## Run
 

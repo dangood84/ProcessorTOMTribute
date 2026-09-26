@@ -1,6 +1,6 @@
 #include "font8x8_basic.h"
 
-#include <SDL.h>
+#include "sdl_inc.h"
 #include <string.h>
 
 /* Public-domain 8×8 glyphs (see font8x8_basic.h). Bit 0 is the left-hand pixel. */

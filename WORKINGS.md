@@ -10,31 +10,37 @@ Work from the project root. `cc` and `sdl2-config` must be on `PATH`. Output lan
 
 | What you want | Command | What you get |
 |---------------|---------|--------------|
-| Window with the sample | `make run` | `build/tom`, then `examples/countup.tom` |
+| Window with the sample | `make run` | `build/tom` (or `build/tom.exe` on Windows), then count-up |
 | Headless checks | `make test` | prints `ok` lines; non-zero if a sample’s printer or counter is wrong |
 | Frozen grid frames | `make snap` | `build/tom-start.bmp`, `tom-mid.bmp`, `ex1-start.bmp`, `ex1-end.bmp` |
 | One program | `./build/tom examples/wexampl1.tom` | that file in the grid |
 | Start over | `make clean` | deletes `build/` |
 
-macOS (Homebrew):
+macOS (Homebrew). Apple Silicon uses `/opt/homebrew`, a 2014 Intel Mac uses `/usr/local`. `sdl2-config` covers both:
 
 ```bash
 brew install sdl2
-make
+make test
 make run
 ```
 
-Debian / Raspberry Pi OS:
+Raspberry Pi OS (desktop image, so there is a screen for the grid):
 
 ```bash
 sudo apt install build-essential libsdl2-dev
-make
-./build/tom examples/countup.tom
+make test
+make run
 ```
 
-Windows: `build-win.bat` from an MSYS2 prompt that already has `gcc` and SDL2. Copy `SDL2.dll` beside `build\tom.exe` if it is not on `PATH`.
+Windows 10 Boot Camp, from the **MSYS2 MinGW x64** shell after `gcc` and SDL2 are installed:
 
-`make test` never opens a window. It assembles the four files in `examples/` and runs the machine until `HLT`, feeding keypad numbers where a program asks for them.
+```bat
+build-win.bat
+build\tom.exe --test examples
+build\tom.exe examples\countup.tom
+```
+
+`make test` never opens a window. It assembles the four files in `examples/` and runs the machine until `HLT`, feeding keypad numbers where a program asks for them. On Windows the executable is `build\tom.exe` and `SDL2.dll` sits beside it. The full Boot Camp and Pi steps are in `README.md`.
 
 ## Mental model
 

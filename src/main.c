@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include <SDL.h>
+#include "sdl_inc.h"
 
 static void usage(void)
 {

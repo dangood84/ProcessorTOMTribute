@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <SDL.h>
+#include "sdl_inc.h"
 
 void tom_draw_text(SDL_Renderer *ren, int x, int y, int scale, const char *text,
                    Uint8 r, Uint8 g, Uint8 b);
@@ -132,8 +132,11 @@ static void set_title(App *a)
     char title[320];
     const char *base = a->loaded[0] ? a->loaded : "TOM";
     const char *slash = strrchr(base, '/');
+    const char *bslash = strrchr(base, '\\');
     if (!a->win)
         return;
+    if (bslash && (!slash || bslash > slash))
+        slash = bslash;
     if (slash)
         base = slash + 1;
     snprintf(title, sizeof title, "TOM — %s", base);
@@ -863,9 +866,23 @@ int tom_ui_main(const char *sample, const char *snap_start, const char *snap_mid
     }
 
     audio_init();
-    app.win = SDL_CreateWindow("TOM",
-                               SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-                               WIN_W, WIN_H, SDL_WINDOW_SHOWN);
+    {
+        /* 1100×740 fits a Mac. A Boot Camp laptop with a taskbar, or a
+           Raspberry Pi on a small panel, gets a shorter window. Drawing
+           stays in the 1100×740 grid; SDL scales it into the real window. */
+        SDL_Rect bounds;
+        int win_w = WIN_W;
+        int win_h = WIN_H;
+        if (SDL_GetDisplayUsableBounds(0, &bounds) == 0) {
+            if (bounds.w > 160 && bounds.w < win_w)
+                win_w = bounds.w - 24;
+            if (bounds.h > 160 && bounds.h < win_h)
+                win_h = bounds.h - 24;
+        }
+        app.win = SDL_CreateWindow("TOM",
+                                   SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+                                   win_w, win_h, SDL_WINDOW_SHOWN);
+    }
     if (!app.win) {
         fprintf(stderr, "SDL_CreateWindow failed: %s\n", SDL_GetError());
         audio_shutdown();
@@ -882,6 +899,7 @@ int tom_ui_main(const char *sample, const char *snap_start, const char *snap_mid
         SDL_Quit();
         return 1;
     }
+    SDL_RenderSetLogicalSize(app.ren, WIN_W, WIN_H);
 
     if (!load_into(&app, sample && sample[0] ? sample : "countup.tom")) {
         set_status(&app, "No sample file found next to the program. Type a line and press Enter.", 1);
