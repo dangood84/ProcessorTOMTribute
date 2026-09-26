@@ -1,0 +1,12 @@
+; wexampl1.tom
+; The first program from the seminar (File, Open, wexampl1.tom).
+; Load 55 from cell 24, print it, and stop.
+; When it halts the program counter sits on 02, the accumulator is 55,
+; and the printer shows 55.
+
+        LDA 24
+        OUT
+        HLT
+
+        ORG 24
+        DAT 55

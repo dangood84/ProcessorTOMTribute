@@ -1,0 +1,24 @@
+; countup.tom
+; The sample to run. This is the seminar exercise "count up in fives".
+; Press F5. The yellow cell is the line TOM is on. Each line clicks.
+; HLT plays the horn. The printer should show 5 10 15 20 25 30 35 40 45 50.
+;
+; answer starts at 0, count starts at 10, and each pass adds 5 and
+; subtracts 1. JM0 leaves the loop when the counter hits zero.
+
+start   LDA answer
+        AC+ five
+        OUT
+        STO answer
+        LDA count
+        AC- one
+        STO count
+        JM0 done
+        JMP start
+done    HLT
+
+        ORG 20
+answer  DAT 0
+count   DAT 10
+five    DAT 5
+one     DAT 1

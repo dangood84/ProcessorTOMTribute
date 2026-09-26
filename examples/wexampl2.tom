@@ -1,0 +1,10 @@
+; wexampl2.tom
+; Read two numbers from the keypad, add them, and print the answer.
+; The yellow cell waits on INP until Enter.
+
+        INP
+        STO 12
+        INP
+        AC+ 12
+        OUT
+        HLT

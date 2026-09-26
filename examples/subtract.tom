@@ -1,0 +1,12 @@
+; subtract.tom
+; The seminar challenge.
+; Read two numbers, subtract the second from the first, and print the answer.
+
+        INP
+        STO 12
+        INP
+        STO 13
+        LDA 12
+        AC- 13
+        OUT
+        HLT

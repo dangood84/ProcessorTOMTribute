@@ -1,0 +1,35 @@
+# make / build-win.bat
+build/
+*.o
+*.obj
+*.exe
+*.dll
+*.a
+*.dSYM/
+a.out
+
+# Grid frames from `make snap`, if they are written outside build/
+tom-start.bmp
+tom-mid.bmp
+ex1-start.bmp
+ex1-end.bmp
+
+# macOS / Windows
+.DS_Store
+._*
+Thumbs.db
+Desktop.ini
+
+# Editors / IDEs
+.idea/
+*.iml
+.project
+.classpath
+.settings/
+.vscode/
+.cursor/
+*.swp
+*~
+
+# Logs
+*.log
