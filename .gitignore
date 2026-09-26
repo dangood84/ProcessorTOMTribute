@@ -14,6 +14,11 @@ tom-mid.bmp
 ex1-start.bmp
 ex1-end.bmp
 
+# SDL2 MinGW development zip, if unpacked next to the source on Windows
+SDL2-*/
+x86_64-w64-mingw32/
+i686-w64-mingw32/
+
 # macOS / Windows
 .DS_Store
 ._*

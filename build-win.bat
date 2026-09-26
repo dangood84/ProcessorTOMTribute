@@ -55,6 +55,16 @@ if not defined SDL_INC if exist "%~dp0%MACHINE%\include\SDL2\SDL.h" (
   set "SDL_LIB=%~dp0%MACHINE%\lib"
   set "SDL_BIN=%~dp0%MACHINE%\bin\"
 )
+rem The MinGW development zip unpacks as SDL2-2.x\x86_64-w64-mingw32\...
+if not defined SDL_INC (
+  for /d %%D in ("%~dp0*") do (
+    if not defined SDL_INC if exist "%%D\%MACHINE%\include\SDL2\SDL.h" (
+      set "SDL_INC=%%D\%MACHINE%\include\SDL2"
+      set "SDL_LIB=%%D\%MACHINE%\lib"
+      set "SDL_BIN=%%D\%MACHINE%\bin\"
+    )
+  )
+)
 
 if not defined SDL_INC (
   echo.
@@ -65,11 +75,10 @@ if not defined SDL_INC (
   echo Your gcc is:
   gcc -dumpmachine
   echo.
-  echo Open "MSYS2 MinGW x64" and install the matching development files:
-  echo   pacman -S --needed mingw-w64-x86_64-SDL2
-  echo.
-  echo That puts SDL.h in the include\SDL2 folder beside gcc.
-  echo Then open a new Command Prompt and run build-win.bat again.
+  echo Download the MinGW development zip, not the small win32 DLL zip:
+  echo   https://github.com/libsdl-org/SDL/releases/download/release-2.32.10/SDL2-devel-2.32.10-mingw.zip
+  echo Unzip it into this project folder, then run build-win.bat again.
+  echo SDL.h is inside x86_64-w64-mingw32\include\SDL2\
   exit /b 1
 )
 
